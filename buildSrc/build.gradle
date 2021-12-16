@@ -1,0 +1,28 @@
+plugins {
+    id 'groovy'
+    id 'java-gradle-plugin'
+}
+
+group 'cn.pbx.gradle'
+
+repositories {
+    gradlePluginPortal()
+    mavenCentral()
+}
+
+gradlePlugin {
+    plugins {
+        javaBuild {
+            id = 'cn.pbx.java'
+            implementationClass = 'cn.pbx.gradle.JavaPlugin'
+        }
+        gitControl {
+            id = 'cn.pbx.git'
+            implementationClass = 'cn.pbx.gradle.GitPlugin'
+        }
+        doc {
+            id = 'cn.pbx.doc'
+            implementationClass = 'cn.pbx.gradle.DocPlugin'
+        }
+    }
+}

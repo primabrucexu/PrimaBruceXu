@@ -1,0 +1,12 @@
+plugins {
+    id 'cn.pbx.java'
+}
+
+
+dependencies {
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+
+}
+
+description = '设计模式'

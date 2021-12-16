@@ -1,0 +1,6 @@
+rootProject.name = 'PrimaBruceXu'
+include(':design-pattern')
+include(':note')
+include(':Java')
+include(':LeetCode')
+include(':project')
