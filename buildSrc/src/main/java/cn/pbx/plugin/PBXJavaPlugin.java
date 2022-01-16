@@ -4,7 +4,6 @@ import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.dsl.RepositoryHandler;
 import org.gradle.api.plugins.JavaBasePlugin;
-import org.gradle.api.plugins.JavaLibraryPlugin;
 import org.gradle.api.plugins.JavaPlugin;
 
 import java.net.URI;
@@ -18,7 +17,7 @@ public class PBXJavaPlugin implements Plugin<Project> {
     @Override
     public void apply(Project project) {
         project.getPluginManager().apply(JavaBasePlugin.class);
-        project.getPluginManager().apply(JavaLibraryPlugin.class);
+//        project.getPluginManager().apply(JavaLibraryPlugin.class);
         project.getPluginManager().apply(JavaPlugin.class);
         configureRepositories(project);
     }
