@@ -10,6 +10,9 @@ import java.util.stream.Collectors;
  * <p>
  * todo 未解决
  *
+ * 二叉树可视化
+ * http://520it.com/binarytrees/
+ *
  * @author BruceXu
  * @date 2022-01-15
  */
@@ -17,18 +20,18 @@ public class offer_07 {
 
     public static void main(String[] args) {
         offer_07 demo = new offer_07();
-        int[] preorder = new int[]{3, 9, 20, 15, 7};
-        int[] inorder = new int[]{9, 3, 15, 20, 7};
+        int[] preorder = new int[]{53, 45, 6, 13, 68, 69, 94, 72, 84};
+        int[] inorder = new int[]{6, 13, 45, 53, 68, 69, 72, 84, 94};
         demo.buildTree(preorder, inorder);
     }
 
     public TreeNode buildTree(int[] preorder, int[] inorder) {
         List<TreeNode> preorderList = Arrays.stream(preorder).boxed().map(TreeNode::new).collect(Collectors.toList());
         List<Integer> inorderList = Arrays.stream(inorder).boxed().collect(Collectors.toList());
-        return buildTree(preorderList, inorderList);
+        return buildTreeV2(preorderList, inorderList);
     }
 
-    private TreeNode buildTree(List<TreeNode> preorder, List<Integer> inorder) {
+    private TreeNode buildTreeV2(List<TreeNode> preorder, List<Integer> inorder) {
         if (preorder.isEmpty()) {
             return null;
         }
@@ -40,40 +43,12 @@ public class offer_07 {
             return root;
         }
 
-        Deque<TreeNode> deque = new LinkedList<>();
-        deque.addLast(root);
 
-        while (!deque.isEmpty()) {
-            TreeNode node = deque.removeFirst();
-            int i = inorder.indexOf(node.val);
-            preorder.remove(node);
-
-            boolean left = true;
-            boolean right = true;
-
-            Set<Integer> leftInorder = new HashSet<>(inorder.subList(0, i));
-            Set<Integer> rightInorder = new HashSet<>(inorder.subList(i + 1, inorder.size()));
-
-            for (TreeNode treeNode : preorder) {
-                if (left && leftInorder.contains(treeNode.val)) {
-                    node.left = treeNode;
-                    deque.addLast(treeNode);
-                    left = false;
-                    continue;
-                }
-                if (right && rightInorder.contains(treeNode.val)) {
-                    node.right = treeNode;
-                    deque.addLast(treeNode);
-                    right = false;
-                    continue;
-                }
-            }
-        }
 
         return root;
     }
 
-    private TreeNode buildTree1(List<Integer> preorder, List<Integer> inorder) {
+    private TreeNode buildTreeV1(List<Integer> preorder, List<Integer> inorder) {
         if (preorder.isEmpty()) {
             return null;
         }
@@ -101,8 +76,8 @@ public class offer_07 {
         List<Integer> leftPreorder = preorder.stream().filter(leftInorder::contains).collect(Collectors.toList());
         List<Integer> rightPreorder = preorder.stream().filter(rightInorder::contains).collect(Collectors.toList());
 
-        TreeNode left = buildTree1(leftPreorder, leftInorder);
-        TreeNode right = buildTree1(rightPreorder, rightInorder);
+        TreeNode left = buildTreeV1(leftPreorder, leftInorder);
+        TreeNode right = buildTreeV1(rightPreorder, rightInorder);
 
         root.left = left;
         root.right = right;
