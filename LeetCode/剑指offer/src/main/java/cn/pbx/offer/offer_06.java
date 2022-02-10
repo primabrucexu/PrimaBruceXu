@@ -1,6 +1,6 @@
 package cn.pbx.offer;
 
-import cn.pbx.offer.util.ListNode;
+import cn.pbx.util.ListNode;
 
 import java.util.Deque;
 import java.util.LinkedList;

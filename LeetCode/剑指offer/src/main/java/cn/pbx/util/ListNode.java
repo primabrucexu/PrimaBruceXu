@@ -1,4 +1,4 @@
-package cn.pbx.offer.util;
+package cn.pbx.util;
 
 /**
  * @author BruceXu

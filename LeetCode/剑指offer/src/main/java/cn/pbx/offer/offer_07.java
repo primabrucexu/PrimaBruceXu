@@ -1,6 +1,6 @@
 package cn.pbx.offer;
 
-import cn.pbx.offer.util.TreeNode;
+import cn.pbx.util.TreeNode;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;

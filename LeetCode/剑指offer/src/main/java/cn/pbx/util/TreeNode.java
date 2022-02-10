@@ -1,4 +1,4 @@
-package cn.pbx.offer.util;
+package cn.pbx.util;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
