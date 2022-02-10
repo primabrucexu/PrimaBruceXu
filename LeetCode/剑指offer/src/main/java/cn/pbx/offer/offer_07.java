@@ -9,10 +9,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 方法一：递归，但是递归铁超时，所以要把递归转换成用迭代
+ * 递归，但是递归超时，超时原因是遇到了退化成链表的二叉树。需要针对这种情况做特殊优化
  * <p>
- * todo 未解决
- *
  * 二叉树可视化
  * http://520it.com/binarytrees/
  *
