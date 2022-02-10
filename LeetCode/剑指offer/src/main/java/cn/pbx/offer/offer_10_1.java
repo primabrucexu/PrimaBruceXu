@@ -6,7 +6,7 @@ package cn.pbx.offer;
  * @author BruceXu
  * @date 2022/2/10
  */
-public class offer_10 {
+public class offer_10_1 {
     public int fib(int n) {
         if (n <= 1) {
             return n;
