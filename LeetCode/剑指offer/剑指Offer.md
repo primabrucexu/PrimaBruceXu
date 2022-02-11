@@ -234,8 +234,9 @@ private boolean next(char[][] board, String word, int i, int j, int pos) {
 
 **思考**
 
-经典的动态规划类型问题，状态转移方程： $$ f(i,j,k)=[f(i,j-1,k)\ \or \ f(i-1,j,k)]\;\and\ visit(i,j,k)
-$$ 其中，$f(i,j,k)$表示位置[i,j]的访问情况，$visit(i,j,k)$表示位置[i,j]是否满足访问条件
+经典的动态规划类型问题，状态转移方程 $$ f(i,j,k)=\begin{cases} f(i,j-1,k)\ \or \ f(i-1,j,k)\;\and\ visit(i,j,k), &i\geq1,j\geq1 \\ f(
+0,j-1,k)\ \and \ visit(0,j,k), &i=0 \\ f(i,0,k)\ \and \ visit(i,0,k), &j=0 \end{cases} $$ 其中，$f(i,j,k)$表示位置[i,j]
+的访问情况，$visit(i,j,k)$表示位置[i,j]是否满足访问条件
 
 **代码**
 
@@ -288,6 +289,45 @@ private boolean canVisit(int i, int j, int k) {
         sum += Integer.parseInt(s.substring(n, n + 1));
     }
     return k >= sum;
+}
+~~~
+
+### 14-1 剪绳子1
+
+**思路**
+
+1. 长度为$n(n>1)$的绳子被切成了$a(a>1)$段，那么就有$n=n_1+n_2+...+n_a$，那么就可以转换为数学问题 $$ f(n)=max(\prod_{i=1}^{a} n_{i})
+   $$
+
+2. 由均值不等式 $$ G_n=\sqrt[n]{\prod_{i=1}^{n} x_{i}}=\sqrt[n]{x_1x_2 \cdots x_n}\leq\frac{\sum_{i=1}^{n}
+   x_i}{n}=\frac{x_1+x_2+\cdots+n_n}{n}，当且仅当x_1=x_2=\cdots=x_n时等号成立 $$ 就可以得出推论，当所有绳段长度相等时乘积最大
+
+3. 因此假设绳子被按照长度$x$分为$a$段，即$n=ax$，乘积$f(n)=x^a=x^\frac{n}{x}=(x^\frac{1}{x})^n$。因为n为常数，所以当函数$g(x)
+   =x^\frac{1}{x}$取得最大值时，函数$f(n)$取得最大值。通过数学推算，易得当$x=e\approx2.7$时函数$g(x)$取得最大值。
+
+4. 由于每段绳子长度为整数，所以要把绳子切成3或2，且3要多
+
+**状态转移方程**
+$$ f(n) =\begin{cases} 1,&n=2 2,&n=3 \\ max(2\times f(n-2), 3\times f(n-3)),&n>3 \end{cases} $$
+**代码**
+
+~~~java
+public int cuttingRope(int n) {
+    if (n == 2) {
+        return 1;
+    }
+    if (n == 3) {
+        return 2;
+    }
+    int[] sum = new int[n+1];
+    for (int i = 1; i <= n; i++) {
+        if (i <= 3) {
+            sum[i] = i;
+        } else {
+            sum[i] = Math.max(2 * sum[i-2], 3 * sum[i - 3]);
+        }
+    }
+    return sum[n];
 }
 ~~~
 
