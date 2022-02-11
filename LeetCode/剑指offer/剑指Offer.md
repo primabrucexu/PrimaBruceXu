@@ -232,5 +232,62 @@ private boolean next(char[][] board, String word, int i, int j, int pos) {
 
 ### 13.机器人的运动范围
 
+**思考**
 
+经典的动态规划类型问题，状态转移方程： $$ f(i,j,k)=[f(i,j-1,k)\ \or \ f(i-1,j,k)]\;\and\ visit(i,j,k)
+$$ 其中，$f(i,j,k)$表示位置[i,j]的访问情况，$visit(i,j,k)$表示位置[i,j]是否满足访问条件
+
+**代码**
+
+~~~java
+public int movingCount(int m, int n, int k) {
+    int sum = 1;
+    boolean[][] table = new boolean[m][n];
+    // 需要先把第0行和第0列填充起来
+    for (int i = 1; i < m; i++) {
+        if (i < 10) {
+            table[i][0] = i <= k;
+        } else {
+            table[i][0] = table[i - 1][0] && canVisit(i, 0, k);
+        }
+        if (table[i][0]) {
+            sum++;
+        }
+    }
+    for (int i = 1; i < n; i++) {
+        if (i < 10) {
+            table[0][i] = i <= k;
+        } else {
+            table[0][i] = table[0][i - 1] && canVisit(i, 0, k);
+        }
+        if (table[0][i]) {
+            sum++;
+        }
+    }
+
+
+    for (int i = 1; i < m; i++) {
+        for (int j = 1; j < n; j++) {
+            table[i][j] = (table[i - 1][j] || table[i][j - 1]) && canVisit(i, j, k);
+            if (table[i][j]) {
+                sum++;
+            }
+        }
+    }
+    return sum;
+}
+
+private boolean canVisit(int i, int j, int k) {
+    int sum = 0;
+    String s = String.valueOf(i);
+    for (int n = 0; n < s.length(); n++) {
+        sum += Integer.parseInt(s.substring(n, n + 1));
+    }
+    s = String.valueOf(j);
+    for (int n = 0; n < s.length(); n++) {
+        sum += Integer.parseInt(s.substring(n, n + 1));
+    }
+    return k >= sum;
+}
+~~~
 
