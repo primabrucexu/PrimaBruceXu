@@ -292,7 +292,7 @@ private boolean canVisit(int i, int j, int k) {
 }
 ~~~
 
-### 14-1 剪绳子1
+### 14-1.剪绳子1
 
 **思路**
 
@@ -330,4 +330,18 @@ public int cuttingRope(int n) {
     return sum[n];
 }
 ~~~
+
+### 16. 数值的整数次方幂
+
+**思路**
+
+- 暴力求解
+
+- 快速幂
+
+  对于任何十进制整数$n$，设其二进制表达式为$n=b_mb_{m-1}\cdots b_2b_1（左边是高位，右边是低位）$，即 $$ n = \sum_{i=1}^{m}2^{i-1} b_i = 1\times
+  b_1+2\times b_2 + \cdots+2^{m-1}\times b_m $$ 所以可得如下公式 $$ x^n = x^{\sum_{i=1}^{m}2^{i-1} b_i}=x^{1\times b_1+2\times
+  b_2 + \cdots+2^{m-1}\times b_m}=x^{1b_1}\cdot x^{2b_2}\cdots x^{2^{m-1}b_m} $$
+
+**代码**
 
