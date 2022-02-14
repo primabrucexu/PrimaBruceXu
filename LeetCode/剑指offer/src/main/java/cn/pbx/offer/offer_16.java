@@ -11,23 +11,28 @@ package cn.pbx.offer;
 public class offer_16 {
     public static void main(String[] args) {
         offer_16 demo = new offer_16();
-        int n = -2147483648;
-        System.out.println(Integer.toBinaryString(n));
-        double x = 2;
+        int n = -2;
+        double x = 3;
+        System.out.println(Math.pow(x, n));
         System.out.println(demo.myPow(x, n));
     }
 
     public double myPow(double x, int n) {
-        String s = Integer.toBinaryString(n);
+        if (n == 0 || x == 1) {
+            return 1;
+        }
+        if (x == 0) {
+            return 0;
+        }
+        String s = Long.toBinaryString(n > 0 ? n : -n);
         double res = 1;
-        double self = 1;
         for (int i = s.length() - 1; i >= 0; i--) {
             if (s.charAt(i) == '0') {
                 res *= 1;
             } else {
-                res *= self;
+                res *= x;
             }
-            self *= x;
+            x *= x;
         }
         return n > 0 ? res : 1 / res;
     }
