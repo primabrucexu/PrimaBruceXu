@@ -11,4 +11,19 @@ public class ListNode {
     public ListNode(int x) {
         val = x;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        ListNode node = this;
+        boolean first = true;
+        while (node != null) {
+            if (!first) {
+                sb.append("->");
+            }
+            sb.append(node.val);
+            node = node.next;
+        }
+        return sb.toString();
+    }
 }
