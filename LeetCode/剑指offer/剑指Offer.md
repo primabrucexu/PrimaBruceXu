@@ -345,3 +345,266 @@ public int cuttingRope(int n) {
 
 **代码**
 
+~~~java
+public double myPow(double x, int n) {
+    if (n == 0 || x == 1) {
+        return 1;
+    }
+    if (x == 0) {
+        return 0;
+    }
+    String s = Long.toBinaryString(n > 0 ? n : -n);
+    double res = 1;
+    for (int i = s.length() - 1; i >= 0; i--) {
+        if (s.charAt(i) == '0') {
+            res *= 1;
+        } else {
+            res *= x;
+        }
+        x *= x;
+    }
+    return n > 0 ? res : 1 / res;
+}
+~~~
+
+### 20. 表示数值的字符串
+
+**思路**
+
+- 有限状态自动机
+
+  > 确定有限状态自动机（以下简称「自动机」）是一类计算模型。它包含一系列状态，这些状态中：
+  >
+  >   - 有一个特殊的状态，被称作「**初始状态**」。
+  >   - 还有一系列状态被称为「**接受状态**」，它们组成了一个特殊的集合。其中，一个状态可能既是「初始状态」，也是「接受状态」。
+  >
+  >   起初，这个自动机处于「**初始状态**」。随后，它顺序地读取字符串中的每一个字符，并根据当前状态和读入的字符，按照某个事先约定好的「**转移规则**」，从当前状态转移到下一个状态；当状态转移完成后，它就读取下一个字符。当字符串全部读取完毕后，如果自动机处于某个「**接受状态**」，则判定该字符串「被接受」；否则，判定该字符串「被拒绝」。
+  >
+  >   注意：如果输入的过程中某一步转移失败了，即不存在对应的「转移规则」，此时计算将提前中止。在这种情况下我们也判定该字符串「被拒绝」。
+  >
+  >   ==一个自动机，总能够回答某种形式的「对于给定的输入字符串 S，判断其是否满足条件 P」的问题。在本题中，条件 P 即为「构成合法的表示数值的字符串」。==
+  >
+  >   自动机驱动的编程，可以被看做一种暴力枚举方法的延伸：它穷尽了在任何一种情况下，对应任何的输入，需要做的事情。
+>
+
+- 使用自动机的关键，就是找出所有的状态集合。**常用字符串处理到那个部分作为技巧**
+
+- 自动机状态集合，其中3、4、6、9、10的状态可以正常退出，其余状态不能正常退出
+
+    1. 开始空格
+    2. 符号字符
+    3. 整数部分
+    4. 左侧有整数的小数点
+    5. 左侧无整数的小数点
+    6. 小数部分
+    7. 字符E或e
+    8. 符号字符
+    9. 整数
+    10. 末尾空格
+
+- 状态转移图
+
+  ![fig1](https://gitee.com/primabrucexu/image/raw/main/image/202203011643279.png)
+
+**代码**
+
+~~~java
+public boolean isNumber(String s) {
+    // 特例处理
+    if (s.length() == 1) {
+        return CharType.get(s.charAt(0)).equals(CharType.NUMBER);
+    }
+
+    // 初始状态集合
+    Map<CharType, State> initMap = new HashMap<>();
+    initMap.put(CharType.SPACE, State.INIT_SPACE);
+    initMap.put(CharType.SIGNAL, State.SIGNAL_BEFORE_E);
+    initMap.put(CharType.POINT, State.POINT_NO_INT_LEFT);
+    initMap.put(CharType.NUMBER, State.INT_BEFORE_E);
+
+    // 获取第一个字符所处的状态
+    State state = initMap.get(CharType.get(s.charAt(0)));
+    if (state == null) {
+        return false;
+    }
+
+    for (int i = 1; i < s.length(); i++) {
+        char c = s.charAt(i);
+        CharType charType = CharType.get(c);
+        if (charType.equals(CharType.ILLEGAL)) {
+            return false;
+        }
+        state = State.trans(state, charType);
+        if (state == null) {
+            return false;
+        }
+    }
+
+    switch (state) {
+        case INT_BEFORE_E:
+        case INT_AFTER_E:
+        case POINT_RIGHT:
+        case POINT_WITH_INT_LEFT:
+        case LAST_SPACE:
+            return true;
+        default:
+            return false;
+    }
+
+}
+
+enum State {
+    /**
+     * 开头的若干空格
+     */
+    INIT_SPACE,
+    /**
+     * 整数或小数部分的符号
+     */
+    SIGNAL_BEFORE_E,
+
+    /**
+     * 整数部分
+     */
+    INT_BEFORE_E,
+
+    /**
+     * 左侧无整数数的小数点
+     */
+    POINT_NO_INT_LEFT,
+
+    /**
+     * 左侧有整数的小数点
+     */
+    POINT_WITH_INT_LEFT,
+
+    /**
+     * 小数点右侧的小数部分
+     */
+    POINT_RIGHT,
+
+    /**
+     * 指数符号
+     */
+    E,
+
+    /**
+     * 指数的符号
+     */
+    SIGNAL_AFTER_E,
+
+    /**
+     * 指数部分的整数
+     */
+    INT_AFTER_E,
+
+    /**
+     * 剩下的空格
+     */
+    LAST_SPACE;
+
+    static final Map<State, Map<CharType, State>> TRANS_MAP = new HashMap<>();
+
+    static {
+        TRANS_MAP.put(INIT_SPACE, new HashMap(){{
+            put(CharType.SPACE, INIT_SPACE);
+            put(CharType.SIGNAL, SIGNAL_BEFORE_E);
+            put(CharType.POINT, POINT_NO_INT_LEFT);
+            put(CharType.NUMBER, INT_BEFORE_E);
+        }});
+        TRANS_MAP.put(SIGNAL_BEFORE_E, new HashMap(){{
+            put(CharType.NUMBER, INT_BEFORE_E);
+            put(CharType.POINT, POINT_NO_INT_LEFT);
+        }});
+        TRANS_MAP.put(INT_BEFORE_E, new HashMap(){{
+            put(CharType.NUMBER, INT_BEFORE_E);
+            put(CharType.POINT, POINT_WITH_INT_LEFT);
+            put(CharType.E, E);
+            put(CharType.SPACE, LAST_SPACE);
+        }});
+        TRANS_MAP.put(POINT_NO_INT_LEFT, new HashMap(){{
+            put(CharType.NUMBER, POINT_RIGHT);
+        }});
+        TRANS_MAP.put(POINT_WITH_INT_LEFT, new HashMap(){{
+            put(CharType.NUMBER, POINT_RIGHT);
+            put(CharType.E, E);
+            put(CharType.SPACE, LAST_SPACE);
+        }});
+        TRANS_MAP.put(POINT_RIGHT, new HashMap(){{
+            put(CharType.NUMBER, POINT_RIGHT);
+            put(CharType.E, E);
+            put(CharType.SPACE, LAST_SPACE);
+        }});
+        TRANS_MAP.put(E, new HashMap(){{
+            put(CharType.SIGNAL, SIGNAL_AFTER_E);
+            put(CharType.NUMBER, INT_AFTER_E);
+        }});
+        TRANS_MAP.put(SIGNAL_AFTER_E, new HashMap(){{
+            put(CharType.NUMBER, INT_AFTER_E);
+        }});
+        TRANS_MAP.put(INT_AFTER_E, new HashMap(){{
+            put(CharType.NUMBER, INT_AFTER_E);
+            put(CharType.SPACE, LAST_SPACE);
+        }});
+        TRANS_MAP.put(LAST_SPACE, new HashMap(){{
+            put(CharType.SPACE, LAST_SPACE);
+        }});
+    }
+
+    static State trans(State nowState, CharType nextCharType) {
+        Map<CharType, State> stateMap = TRANS_MAP.get(nowState);
+        return stateMap.get(nextCharType);
+    }
+
+}
+
+enum CharType {
+    /**
+     * 小数点
+     */
+    POINT,
+
+    /**
+     * 数字
+     */
+    NUMBER,
+
+    /**
+     * E或者e
+     */
+    E,
+
+    /**
+     * 空格
+     */
+    SPACE,
+
+    /**
+     * 符号
+     */
+    SIGNAL,
+
+    /**
+     * 退出自动
+     */
+    ILLEGAL;
+
+    static CharType get(char c) {
+        if (c >= '0' && c <= '9') {
+            return NUMBER;
+        } else if (c == '.') {
+            return POINT;
+        } else if (c == 'e' || c == 'E') {
+            return E;
+        } else if (c == ' ') {
+            return SPACE;
+        } else if (c == '-' || c == '+') {
+            return SIGNAL;
+        } else {
+            return ILLEGAL;
+        }
+    }
+
+}
+~~~
+
