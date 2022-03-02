@@ -12,8 +12,20 @@ public class ListNode {
         val = x;
     }
 
+    public void add(int x) {
+        ListNode node = this;
+        while (node.next != null) {
+            node = node.next;
+        }
+        node.next = new ListNode(x);
+    }
+
     @Override
     public String toString() {
+        return next != null ? val + "->" + next.val : val + "->" + "null";
+    }
+
+    public String display() {
         StringBuilder sb = new StringBuilder();
         ListNode node = this;
         boolean first = true;
@@ -21,6 +33,7 @@ public class ListNode {
             if (!first) {
                 sb.append("->");
             }
+            first = false;
             sb.append(node.val);
             node = node.next;
         }
