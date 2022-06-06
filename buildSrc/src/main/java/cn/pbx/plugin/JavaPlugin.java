@@ -3,8 +3,7 @@ package cn.pbx.plugin;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.dsl.RepositoryHandler;
-import org.gradle.api.plugins.JavaBasePlugin;
-import org.gradle.api.plugins.JavaPlugin;
+import org.gradle.api.plugins.ApplicationPlugin;
 
 import java.net.URI;
 
@@ -12,13 +11,11 @@ import java.net.URI;
  * @author BruceXu
  * @date 2021/12/16
  */
-public class PBXJavaPlugin implements Plugin<Project> {
+public class JavaPlugin implements Plugin<Project> {
 
     @Override
     public void apply(Project project) {
-        project.getPluginManager().apply(JavaBasePlugin.class);
-//        project.getPluginManager().apply(JavaLibraryPlugin.class);
-        project.getPluginManager().apply(JavaPlugin.class);
+        project.getPluginManager().apply(ApplicationPlugin.class);
         configureRepositories(project);
     }
 

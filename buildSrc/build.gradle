@@ -10,11 +10,11 @@ gradlePlugin {
     plugins {
         javaBuild {
             id = 'cn.pbx.java'
-            implementationClass = 'cn.pbx.plugin.PBXJavaPlugin'
+            implementationClass = 'cn.pbx.plugin.JavaPlugin'
         }
         gitControl {
-            id = 'cn.pbx.vcs'
-            implementationClass = 'cn.pbx.plugin.VCSPlugin'
+            id = 'cn.pbx.git'
+            implementationClass = 'cn.pbx.plugin.GitPlugin'
         }
         doc {
             id = 'cn.pbx.doc'
