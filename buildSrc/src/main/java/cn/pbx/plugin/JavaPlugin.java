@@ -3,6 +3,7 @@ package cn.pbx.plugin;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.dsl.RepositoryHandler;
+import org.gradle.api.plugins.PluginManager;
 
 import java.net.URI;
 
@@ -14,7 +15,8 @@ public class JavaPlugin implements Plugin<Project> {
 
     @Override
     public void apply(Project project) {
-        project.getPluginManager().apply(org.gradle.api.plugins.JavaPlugin.class);
+        PluginManager pluginManager = project.getPluginManager();
+        pluginManager.apply(org.gradle.api.plugins.JavaPlugin.class);
         configureRepositories(project);
     }
 
