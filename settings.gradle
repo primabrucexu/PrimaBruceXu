@@ -6,3 +6,6 @@ include(':Java:Laboratory')
 include(':LeetCode:LeetCode')
 //include(':project')
 include(':LeetCode:剑指offer')
+include 'LeetCode:Huawei'
+findProject(':LeetCode:Huawei')?.name = 'Huawei'
+
