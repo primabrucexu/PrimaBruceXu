@@ -1,4 +1,4 @@
-package cn.pbx.practise.bt;
+package cn.pbx.practise.BackTracking;
 
 import java.util.ArrayList;
 import java.util.HashSet;
