@@ -281,11 +281,11 @@ ES是通过封装Lucene来实现其搜索功能。Lucene采用一种叫倒排索
 
 那么倒排索引之后的结果如下：
 
-![image-20210705153127300](https://gitee.com/primabrucexu/image/raw/main/20210705153127.png)
+![20210705153127](https://cdn.jsdelivr.net/gh/primabrucexu/image@main/picgo/202207101540481.png)
 
 现在我们要搜索 Quick brown只需要根据倒排索引之后的结果反向去查找文档即可：
 
-![image-20210705153240715](https://gitee.com/primabrucexu/image/raw/main/20210705153240.png)
+![20210705153240](https://cdn.jsdelivr.net/gh/primabrucexu/image@main/picgo/202207101540231.png)
 
 两个文档都匹配，如果我们仅从匹配数量来判断相关性来说，文档1比文档2更符合我们预期的搜索结果
 
@@ -308,7 +308,7 @@ ES是通过封装Lucene来实现其搜索功能。Lucene采用一种叫倒排索
 
 现在，我们的倒排索引像这样
 
-![image-20210705155030806](https://gitee.com/primabrucexu/image/raw/main/20210705155030.png)
+![20210705155030](https://cdn.jsdelivr.net/gh/primabrucexu/image@main/picgo/202207101541172.png)
 
 到这一步，已经算是完成了50%，因为我们格式化了源数据，还需要对我们的查询输入做同样的操作，这样，才能完美的查询
 
@@ -597,7 +597,7 @@ cluster.initial_master_nodes: ["node-1", "node-2"]
 
 -   idea会自动导入gradle项目，期间会联网下载gradle。如果不想等待，可以在 `项目文件夹/gradle/wrapper/gradle-wrapper.properties` 中手动设置gradle的位置，从而跳过下载
 
-    ![image-20210702183926159](https://gitee.com/primabrucexu/image/raw/main/20210702183926.png)
+    ![20210702183926](https://cdn.jsdelivr.net/gh/primabrucexu/image@main/picgo/202207101542892.png)
     -   手动设置的话可能会出现sha256校验失败等问题，注释相关配置即可
 
 -   等待gradle构建完成
@@ -690,13 +690,13 @@ ES是基于Lucene来实现搜索功能，Lucene中提出了**按段搜索**的�
    - 一个新的包含新段名字的 **提交点** 被写入磁盘。
    - 磁盘进行 **同步**，所有在文件系统缓存中等待的写入都刷新到磁盘，以确保它们被写入物理文件。
 
-   ![A Lucene index with new documents in the in-memory buffer, ready to commit](https://gitee.com/primabrucexu/image/raw/main/20210706180055.png)
+   ![20210706180055](https://cdn.jsdelivr.net/gh/primabrucexu/image@main/picgo/202207101549654.png)
 
 3. 新的段被开启，让它包含的文档可见以被搜索。**由于物理写入磁盘开销大，所以在实际运行的过程中，只要数据在缓存中，就可以被外部所读取访问到了。因为Lucene 允许新段被写入和打开—使其包含的文档在未进行一次完整提交时便对搜索可见。 这种方式比进行一次提交代价要小得多，并且在不影响性能的前提下可以被频繁地执行。**
 
 4. 内存缓存被清空，等待接收新的文档。
 
-   ![After a commit, a new segment is added to the index and the buffer is cleared](https://gitee.com/primabrucexu/image/raw/main/20210706180107.png)
+   ![20210706180107](https://cdn.jsdelivr.net/gh/primabrucexu/image@main/picgo/202207101550601.png)
 
 5. 当一个查询被触发，所有已知的段按顺序被查询。词项统计会对所有段的结果进行聚合，以保证每个词和每个文档的关联都被准确计算。 这种方式可以用相对较低的成本将新文档添加到索引。
 
@@ -710,7 +710,7 @@ ES是基于Lucene来实现搜索功能，Lucene中提出了**按段搜索**的�
 
 1. 一个文档被索引之后，就会被添加到内存缓冲区，同时追加到了 translog
 
-   ![New documents are added to the in-memory buffer and appended to the transaction log](https://gitee.com/primabrucexu/image/raw/main/20210706181147.png)
+   ![20210706181147](https://cdn.jsdelivr.net/gh/primabrucexu/image@main/picgo/202207101551441.png)
 
 2. 刷新（refresh）使分片处于提交的状态，分片每秒被刷新（refresh）一次：
 
@@ -718,11 +718,11 @@ ES是基于Lucene来实现搜索功能，Lucene中提出了**按段搜索**的�
    - 这个段被打开，使其可被搜索。
    - 内存缓冲区被清空。
 
-   ![After a refresh, the buffer is cleared but the transaction log is not](https://gitee.com/primabrucexu/image/raw/main/20210706181231.png)
+   ![20210706181231](https://cdn.jsdelivr.net/gh/primabrucexu/image@main/picgo/202207101551392.png)
 
 3. 这个进程继续工作，更多的文档被添加到内存缓冲区和追加到事务日志
 
-   ![The transaction log keeps accumulating documents](https://gitee.com/primabrucexu/image/raw/main/20210706181257.png)
+   ![20210706181257](https://cdn.jsdelivr.net/gh/primabrucexu/image@main/picgo/202207101551568.png)
 
 4. 每隔一段时间，translog 变得越来越大，索引被刷新（flush）；一个新的 translog 被创建，并且一个全量提交被执行：
 
@@ -732,11 +732,11 @@ ES是基于Lucene来实现搜索功能，Lucene中提出了**按段搜索**的�
    - 文件系统缓存通过 `fsync` 被刷新（flush）。
    - 老的 translog 被删除。
 
-![After a flush, the segments are fully commited and the transaction log is cleared](https://gitee.com/primabrucexu/image/raw/main/20210706181352.png)
+![20210706181352](https://cdn.jsdelivr.net/gh/primabrucexu/image@main/picgo/202207101552813.png)
 
-​		**translog 提供所有还没有被刷到磁盘的操作的一个持久化纪录。当 Elasticsearch 启动的时候， 它会从磁盘中使用最后一个提交点去恢复已知的段，并且会重放 translog 中所有在最后一次提交后发生的变更操作。**
+**translog 提供所有还没有被刷到磁盘的操作的一个持久化纪录。当 Elasticsearch 启动的时候， 它会从磁盘中使用最后一个提交点去恢复已知的段，并且会重放 translog 中所有在最后一次提交后发生的变更操作。**
 
-​		**translog 也被用来提供实时 CRUD 。当你试着通过ID查询、更新、删除一个文档，它会在尝试从相应的段中检索之前， 首先检查 translog 任何最近的变更。这意味着它总是能够实时地获取到文档的最新版本。**
+**translog 也被用来提供实时 CRUD 。当你试着通过ID查询、更新、删除一个文档，它会在尝试从相应的段中检索之前， 首先检查 translog 任何最近的变更。这意味着它总是能够实时地获取到文档的最新版本。**
 
 > ***translog的安全性***
 >
@@ -803,37 +803,37 @@ Elasticsearch通过在后台进行段合并来解决这个问题。小的段被�
 
 1. 首先，我们有6个节点的集群，所有节点都互联，P6是master
 
-   ![img](https://gitee.com/primabrucexu/image/raw/main/20210707102315.gif)
+   ![20210707102315](https://cdn.jsdelivr.net/gh/primabrucexu/image@main/picgo/202207101613320.gif)
 
 2. P6挂了
 
-   ![img](https://gitee.com/primabrucexu/image/raw/main/20210707102414.gif)
+   ![20210707102414](https://cdn.jsdelivr.net/gh/primabrucexu/image@main/picgo/202207101613024.gif)
 
 3. P3发现P6挂了，于是向所有比自己ID大的节点发送选举消息（election）
 
    - 要给P6发的原因是P6有可能恢复了，所以P6也要发
 
-   ![img](https://gitee.com/primabrucexu/image/raw/main/20210707102532.gif)
+   ![20210707102532](https://cdn.jsdelivr.net/gh/primabrucexu/image@main/picgo/202207101614590.gif)
 
 4. P4和P5都收到了消息，并表示他们会接手，你就不用管了（bully P3）
 
-   ![img](https://gitee.com/primabrucexu/image/raw/main/20210707103023.gif)
+   ![20210707103023](https://cdn.jsdelivr.net/gh/primabrucexu/image@main/picgo/202207101614108.gif)
 
 5. P4开始接管选主流程，它开始向P5和P6发送选举信息
 
-   ![img](https://gitee.com/primabrucexu/image/raw/main/20210707103744.gif)
+   ![20210707103744](https://cdn.jsdelivr.net/gh/primabrucexu/image@main/picgo/202207101614614.gif)
 
 6. 只有P5响应了，P5从这里开始接管选举（bully p4）
 
-   ![img](https://gitee.com/primabrucexu/image/raw/main/20210707103827.gif)
+   ![20210707103827](https://cdn.jsdelivr.net/gh/primabrucexu/image@main/picgo/202207101614242.gif)
 
 7. P5发送选举信息
 
-   ![img](https://gitee.com/primabrucexu/image/raw/main/20210707103929.gif)
+   ![20210707103929](https://cdn.jsdelivr.net/gh/primabrucexu/image@main/picgo/202207101614349.gif)
 
 8. 没有人能响应P5的选举信息，于是P5当选master，同时告诉别人他是master
 
-   ![img](https://gitee.com/primabrucexu/image/raw/main/20210707104004.gif)
+   ![20210707104004](https://cdn.jsdelivr.net/gh/primabrucexu/image@main/picgo/202207101615580.gif)
 
 **优缺点**
 
