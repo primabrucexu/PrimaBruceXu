@@ -6,12 +6,6 @@ package cn.pbx.demo;
  */
 public class Demo {
     public static void main(String[] args) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(Integer.toBinaryString(128));
-        sb.append(Integer.toBinaryString(255));
-        sb.append(Integer.toBinaryString(255));
-        sb.append(Integer.toBinaryString(255));
-        System.out.println(sb.length());
-        System.out.println(Long.parseLong(sb.toString(), 2));
+
     }
 }
